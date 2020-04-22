@@ -5,51 +5,37 @@ import javax.imageio.IIOException;
 import java.io.*;
 
 public class Main {
-
-    int n = 3;
     
     public static void main(String args[]) throws IOException {
+
         BufferedReader reader  = new BufferedReader(new InputStreamReader(System.in));
 
         int noOfPersons = Integer.parseInt(reader.readLine());
-        Person persons[] = new Person[noOfPersons];
-
-        Person A =  new Person("A");
-        Person B =  new Person("B");
-        Person C =  new Person("C");
+        Map <String,Person>personMap = new HashMap<String,Person>();
 
        
-        for(int i=0;i<persons.length;i++){
+        for(int i=0;i<noOfPersons;i++){
             String personName = ((char)(65+i))+"";
-            persons[i] = new Person(personName);
+            personMap.put(personName, new Person(personName));
         }
 
         while(true) {
             String input  = reader.readLine();
 
             if(input.equals("n")){
-                findAmountToBeReceived(A,B,C);
-                findAmountToBeReceived(B,C,A);
-                findAmountToBeReceived(C,B,A);
+                find(personMap);
                 break;
             }
             String arr[] = input.split(" ");
 
-            if(arr[1].equals("A")){
-                calculate(A, arr);
-            }
-            else if(arr[1].equals("B")){
-                calculate(B,arr);
-            }
-            else if(arr[1].equals("C")){
-                calculate(C,arr);
-            }
+            calc(personMap,arr);
 
         }
     }
-
-     static void calculate(Person person,String arr[]){
+    static void calc (Map persons,String arr[]) {
+       
         int amount = Integer.parseInt(arr[0]);
+        Person person = (Person)persons.get(arr[1]);
         Map<String,Integer> spent = person.getSpent();
 
         for(int i =2;i<arr.length;i++){
@@ -61,31 +47,48 @@ public class Main {
             else{
                 spent.put(arr[i], amount / (arr.length - 1));
             }
+            person.setSpent(spent);
         }
-        person.setSpent(spent);
+       
+
     }
-    static void findAmountToBeReceived (Person person,Person one,Person two){
-        String personName  = person.getPersonName();
-        Map<String,Integer> spent = person.getSpent();
-        int spentFor=0;
-        int receivedFor=0;
-        Iterator hmIterator = spent.entrySet().iterator(); 
 
-        while (hmIterator.hasNext()) { 
-            Map.Entry mapElement = (Map.Entry)hmIterator.next(); 
-            spentFor += ((int)mapElement.getValue()); 
-        }
-         
-            int s1= one.getSpent().containsKey(personName) ? one.getSpent().get(personName) :0;
-            int s2= two.getSpent().containsKey(personName) ?two.getSpent().get(personName):0;
-            receivedFor = s1+s2;         
+    
+    static void find(Map persons){
+        Iterator personIterator = persons.entrySet().iterator(); 
+            while (personIterator.hasNext()) { 
+                Map.Entry mapElement = (Map.Entry)personIterator.next(); 
+                Person person = (Person)mapElement.getValue();
 
-        if(receivedFor == 0){
-            System.out.println(personName +"  gets  "+ spentFor);
-        }
-        else if(spentFor == 0){
-            System.out.println(personName +"  gives  "+ receivedFor);
+            String personName = person.getPersonName();
+            Map<String,Integer> spent = person.getSpent();
+            
+            int spentFor=0;
+            int receivedFor=0;
+            Iterator hmIterator = spent.entrySet().iterator(); 
 
+            while (hmIterator.hasNext()) { 
+                Map.Entry mapEl = (Map.Entry)hmIterator.next(); 
+                spentFor += ((int)mapEl.getValue()); 
+            }
+            Iterator pIterator = persons.entrySet().iterator(); 
+
+            while (pIterator.hasNext()) { 
+                Map.Entry mapElem = (Map.Entry)pIterator.next(); 
+                Person person1 = (Person)mapElem.getValue();
+                if(!person1.equals(person)){
+                Map<String,Integer> map = person1.getSpent();
+                receivedFor+=map.containsKey(personName)?map.get(personName):0;
+               }
+               
+            }
+            if(receivedFor == 0){
+                System.out.println(personName +"  gets  "+ spentFor);
+            }
+            else if(spentFor == 0){
+                System.out.println(personName +"  gives  "+ receivedFor);
+    
+            }
         }
 
     }

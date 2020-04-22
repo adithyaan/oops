@@ -1,9 +1,10 @@
 import java.util.*;
 
 public class Person {
-    public Map <String,Integer> spent = new HashMap<String,Integer>();
-    public Map <String,Integer> received = new HashMap<String,Integer>();
-    String personName;
+    private Map <String,Integer> spent = new HashMap<String,Integer>();
+    private Map <String,Integer> received = new HashMap<String,Integer>();
+    private String personName;
+
     public Person(String personName){
         this.personName = personName;
     }
