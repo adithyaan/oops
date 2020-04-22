@@ -9,11 +9,20 @@ public class Main {
     int n = 3;
     
     public static void main(String args[]) throws IOException {
-         BufferedReader reader  = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader reader  = new BufferedReader(new InputStreamReader(System.in));
+
+        int noOfPersons = Integer.parseInt(reader.readLine());
+        Person persons[] = new Person[noOfPersons];
+
         Person A =  new Person("A");
         Person B =  new Person("B");
-        Person  C =  new Person("C");
+        Person C =  new Person("C");
 
+       
+        for(int i=0;i<persons.length;i++){
+            String personName = ((char)(65+i))+"";
+            persons[i] = new Person(personName);
+        }
 
         while(true) {
             String input  = reader.readLine();
