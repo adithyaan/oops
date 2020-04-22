@@ -19,9 +19,9 @@ public class Main {
             String input  = reader.readLine();
 
             if(input.equals("n")){
-                findAmountToBeReceived(A,"A",B,C);
-                findAmountToBeReceived(B,"B",C,A);
-                findAmountToBeReceived(C,"C",B,A);
+                findAmountToBeReceived(A,B,C);
+                findAmountToBeReceived(B,C,A);
+                findAmountToBeReceived(C,B,A);
                 break;
             }
             String arr[] = input.split(" ");
@@ -41,21 +41,22 @@ public class Main {
 
      static void calculate(Person person,String arr[]){
         int amount = Integer.parseInt(arr[0]);
+        Map<String,Integer> spent = person.getSpent();
+
         for(int i =2;i<arr.length;i++){
-            if(person.spent.containsKey(arr[i])) {
-                Map<String,Integer> spent = person.getSpent();
+            if(person.getSpent().containsKey(arr[i])) {
                 int value = spent.get(arr[i]);
                 int total=(amount / (arr.length - 1))+value;
                 spent.put(arr[i], total);
-                person.setSpent(spent);
             }
             else{
-                person.spent.put(arr[i], amount / (arr.length - 1));
-
+                spent.put(arr[i], amount / (arr.length - 1));
             }
         }
+        person.setSpent(spent);
     }
-    static void findAmountToBeReceived (Person person,String personName,Person one,Person two){
+    static void findAmountToBeReceived (Person person,Person one,Person two){
+        String personName  = person.getPersonName();
         Map<String,Integer> spent = person.getSpent();
         int spentFor=0;
         int receivedFor=0;
@@ -77,10 +78,6 @@ public class Main {
             System.out.println(personName +"  gives  "+ receivedFor);
 
         }
-
-    }
-
-    static void findAmountToBeGiven(Person person,String personName,Person one,Person two){
 
     }
 }
